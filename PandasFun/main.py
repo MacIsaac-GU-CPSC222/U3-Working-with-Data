@@ -147,6 +147,8 @@ import numpy as np
 # # works with numpy ufuncs
 # print(np.min(pop_ser))
 
+# TODO: Get the mean of Seattle and Spokane
+
 # # we can add a new value to the series
 # # much like we add a new key-value pair to a dictionary
 # pop_ser["Sammamish"] = 65116
@@ -216,6 +218,8 @@ import numpy as np
 # #   - fancy index (list of values)
 # print(pop_df.iloc[[1,3], 0])
 
+# TODO: Using .iloc, print the last row of pop_df 
+
 
 
 # # Reading in a CSV
@@ -225,6 +229,8 @@ import numpy as np
 # print(region_df)
 # print(region_df.columns)
 # print(region_df.index)
+
+# TODO: Print the first 3 city names from region_df (use the index)
 
 # # now lets join pop_df and region_df on "City"
 # # to make a 3rd DataFrame
