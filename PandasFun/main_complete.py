@@ -32,8 +32,10 @@ Continuous
     - 0 degrees kelvin means absence of temperature
 
     interval: continuous where 0 does not mean absence
+    - differences between values matter but ratios don't
     ex: 
     - 0 degrees fahrenheit does not mean absence of temp
+    - latitude and longitude
 
 ======================================================
 Noisy vs Invalid
@@ -42,9 +44,9 @@ Noisy vs Invalid
     ex: 
     - age attribute, someone who is 18 years old, but 81 years old was entered
 
-    invalid: not valid on the measurement scale
+    Invalid: not valid on the measurement scale
     ex: 
-    - age attribute, someone enters "bob"
+    - age attribute, someone enters "Sarah"
 
 ======================================================
 Labeled vs Unlabeled Data (Preview for Machine Learning)
@@ -72,6 +74,8 @@ Labeled data:
 
 Unlabeled data:
   There is no class attribute to predict. Instead, you are exploring the data to discover patterns.
+  
+  - The data still can have meaning and structure, it just lacks a target label we are trying to predict/discover
 
   Examples:
     - Grouping customers by purchasing behavior
@@ -103,6 +107,7 @@ Unlabeled data:
 # you can create a Series from many different date types
 # lets make one from a list
 import pandas as pd
+import numpy as np
 
 pops = [229447, 755078, 151574, 38977]
 cities = ["Spokane", "Seattle", "Bellevue", "Issaquah"]
@@ -110,20 +115,37 @@ pop_ser = pd.Series(pops, index=cities)
 pop_ser.name = "Population"
 print(pop_ser)
 
-# indexing
+# indexing and slicing with series
+
+# first method: labels
+
+# 1. indexing with label
 print(pop_ser["Seattle"])
+# 2. indexing with list of labels
 print(pop_ser[["Seattle", "Issaquah"]])
-print(pop_ser["Seattle":"Issaquah"]) # label based slicing
+
+# 3. slicing with labels
 # is inclusive of the stop label
+print(pop_ser["Seattle":"Issaquah"])
+
+# second indexing with positions
 # use .iloc[ ] for position based indexing
+
+# 1. indexing with position
 print(pop_ser.iloc[1])
+
+# 2. indexing with list of positions
 print(pop_ser.iloc[[1, 3]])
-print(pop_ser.iloc[1:3]) # position based slicing
+
+# 3. slicing with positions
 # is exclusive of the stop label
+print(pop_ser.iloc[1:3])
 
 # summary stats
 print(pop_ser.mean())
 print(pop_ser.std())
+# works with numpy ufuncs
+print(np.min(pop_ser))
 
 # we can add a new value to the series
 # much like we add a new key-value pair to a dictionary
@@ -144,6 +166,9 @@ twod_list = [["a", 3, 99.9],
 df = pd.DataFrame(twod_list,
                   index=["row1", "row2", "row3"],
                   columns=["col1", "col2", "col3"])
+
+df.index.name = "rows"
+df.columns.name = "cols"
 print(df)
 # task: make a dataframe for our city population data
 # columns: "City", "Population", "Size"
@@ -157,30 +182,55 @@ pop_df = pop_df.set_index("City")
 print(pop_df)
 print()
 
-# indexing
-# GS cleaning up this section a bit after class
-pop_ser = pop_df["Population"]
-print(pop_ser)
-seattle_ser = pop_df.iloc[1]
-print(seattle_ser)
-seattle_pop = pop_df.iloc[1, 0]
-print(seattle_pop)
-# use .loc[ ] to do label based row indexing
-seattle_ser = pop_df.loc["Seattle"]
-print(seattle_ser)
-seattle_pop = pop_df.loc["Seattle", "Population"]
-print(seattle_pop)
+
+# Dataframe indexing
+print("=========DF index=========")
+# option 1: Basic Indexing (Takes column name, not row index)
+# df[col_name1] 
+print(pop_df["Population"])
+# df[[col_name1, col_name2]] 
+print(pop_df[["Population", "Size"]])
+
+print("=========DF .loc=========")
+# Option 2: .loc function (takes row/column names, not positions)
+# format df.loc[row, col]
+# each section can take 
+#   - single value (row/cell selection)
+print(pop_df.loc["Seattle"])
+print(pop_df.loc["Seattle", "Population"])
+#   - slice
+print(pop_df.loc[:, "Population"])
+print(pop_df.loc["Seattle":"Issaquah", "Population"])
+print(pop_df.loc["Seattle":"Issaquah", "Population":"Size"])
+#   - fancy index (list of values)
+print(pop_df.loc[["Seattle","Issaquah"], "Population"])
+
+print("=========DF .iloc=========")
+# Option 3: .iloc function (takes, row/column positions, not names)
+print(pop_df.iloc[1])
+print(pop_df.iloc[1, 0])
+#   - slice
+print(pop_df.iloc[:, 0])
+print(pop_df.iloc[1:3, 0])
+print(pop_df.iloc[1:3, 0:2])
+#   - fancy index (list of values)
+print(pop_df.iloc[[1,3], 0])
 
 
-# look into pd.read_csv("filename")
+
+# Reading in a CSV
 # lets load up regions.csv into a dataframe
+
 region_df = pd.read_csv("regions.csv", index_col=0)
 print(region_df)
+print(region_df.columns)
+print(region_df.index)
 
 # now lets join pop_df and region_df on "City"
 # to make a 3rd DataFrame
 # by default, merge() does an inner join
-merged_df = pop_df.merge(region_df, on=["City"], how="outer")
+print(pop_df.index.name)
+merged_df = pop_df.merge(region_df, on="City", how="outer")
 print(merged_df)
 
 # lets write the contents of merged_df to a file
@@ -194,35 +244,39 @@ merged_df.to_csv("merged.csv")
 grouped_by_size = merged_df.groupby("Size")
 
 # short way to do # 2. apply and #3. combine
+# grouped operations return a series with each group item 
+# matched to the corresponding value
 mean_pop_ser = grouped_by_size["Population"].mean()
 print("short way: split apply combine results:")
 print(mean_pop_ser)
 print()
 
-# GS adding after class
-# longer way to do #2. apply and #3. combine
-# (explaining what is going on with grouped_by_size)
-print(grouped_by_size)
-print(grouped_by_size.groups.keys())
-large_df = grouped_by_size.get_group("Large")
-print(large_df)
-print(type(large_df))
-# we don't want to hard code extracted each attribute value's
-# data frame with get_group()
-# instead, we are going to write extensible code using...
-# a loop!!
-mean_pop_ser = pd.Series(dtype=float)
-for group_name, group_df in grouped_by_size:
-    print(group_name)
-    print(group_df)
-    # 2. apply
-    group_pop_ser = group_df["Population"]
-    group_pop_mean = group_pop_ser.mean()
-    print(group_pop_mean)
-    # 3. combine
-    mean_pop_ser[group_name] = group_pop_mean
-    print("*****")
 
-print("long way: split apply combine results:")
-print(mean_pop_ser)
+
+
+# # longer way to do #2. apply and #3. combine
+# # (explaining what is going on with grouped_by_size)
+# print(grouped_by_size)
+# print(grouped_by_size.groups.keys())
+# large_df = grouped_by_size.get_group("Large")
+# print(large_df)
+# print(type(large_df))
+# # we don't want to hard code extracted each attribute value's
+# # data frame with get_group()
+# # instead, we are going to write extensible code using...
+# # a loop!!
+# mean_pop_ser = pd.Series(dtype=float)
+# for group_name, group_df in grouped_by_size:
+#     print(group_name)
+#     print(group_df)
+#     # 2. apply
+#     group_pop_ser = group_df["Population"]
+#     group_pop_mean = group_pop_ser.mean()
+#     print(group_pop_mean)
+#     # 3. combine
+#     mean_pop_ser[group_name] = group_pop_mean
+#     print("*****")
+
+# print("long way: split apply combine results:")
+# print(mean_pop_ser)
 
