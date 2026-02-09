@@ -115,18 +115,38 @@ import numpy as np
 # pop_ser.name = "Population"
 # print(pop_ser)
 
+
+
+
+
+
+
+
 # # indexing and slicing with series
 
 # # first method: labels
 
 # # 1. indexing with label
 # print(pop_ser["Seattle"])
+
+
+
+
 # # 2. indexing with list of labels
 # print(pop_ser[["Seattle", "Issaquah"]])
+
+
+
 
 # # 3. slicing with labels
 # # is inclusive of the stop label
 # print(pop_ser["Seattle":"Issaquah"])
+
+
+
+
+
+
 
 # # second indexing with positions
 # # use .iloc[ ] for position based indexing
@@ -148,10 +168,11 @@ import numpy as np
 # print(np.min(pop_ser))
 
 # TODO: Get the mean of Seattle and Spokane
+# 
 
 # # we can add a new value to the series
 # # much like we add a new key-value pair to a dictionary
-# pop_ser["Sammamish"] = 65116
+# pop_ser["Cheney"] = 16032
 # print(pop_ser)
 
 # # we can also make an empty Series
@@ -169,6 +190,7 @@ import numpy as np
 #                   index=["row1", "row2", "row3"],
 #                   columns=["col1", "col2", "col3"])
 
+# print(df)
 # df.index.name = "rows"
 # df.columns.name = "cols"
 # print(df)
@@ -221,7 +243,6 @@ import numpy as np
 # TODO: Using .iloc, print the last row of pop_df 
 
 
-
 # # Reading in a CSV
 # # lets load up regions.csv into a dataframe
 
@@ -231,6 +252,7 @@ import numpy as np
 # print(region_df.index)
 
 # TODO: Print the first 3 city names from region_df (use the index)
+
 
 # # now lets join pop_df and region_df on "City"
 # # to make a 3rd DataFrame
