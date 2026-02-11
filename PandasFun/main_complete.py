@@ -253,9 +253,10 @@ print()
 
 
 
-group_by_region = merged_df.groupby("Region")
-min_pop_reg = group_by_region["Population"].min()
+group_by_region = merged_df.groupby("Size")
+min_pop_reg = group_by_region["Population"].idxmin().dropna()
 print(min_pop_reg)
+print(merged_df.loc[min_pop_reg])
 
 
 # # longer way to do #2. apply and #3. combine
