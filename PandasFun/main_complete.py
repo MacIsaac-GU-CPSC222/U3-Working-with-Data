@@ -253,6 +253,10 @@ print()
 
 
 
+group_by_region = merged_df.groupby("Region")
+min_pop_reg = group_by_region["Population"].min()
+print(min_pop_reg)
+
 
 # # longer way to do #2. apply and #3. combine
 # # (explaining what is going on with grouped_by_size)

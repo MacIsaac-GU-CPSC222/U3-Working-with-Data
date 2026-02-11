@@ -254,15 +254,22 @@ print(pop_df.iloc[-1])
 # TODO: Using .iloc, print the last two rows of pop_df 
 print(pop_df.iloc[-2: ])
 
+
+
+
+
+
+
+
 # # Reading in a CSV
 # # lets load up regions.csv into a dataframe
 
-# region_df = pd.read_csv("regions.csv", index_col=0)
-# print(region_df)
-# print(region_df.columns)
-# print(region_df.index)
+region_df = pd.read_csv("regions.csv", index_col=0)
+print(region_df)
+print(region_df.columns)
+print(region_df.index)
 
-# TODO: Print the first 3 city names from region_df (use the position indexes)
+# TODO: Print the first 3 rows from region_df (use the position indexes - iloc)
 
 
 # # now lets join pop_df and region_df on "City"
@@ -289,6 +296,11 @@ print(pop_df.iloc[-2: ])
 # print("short way: split apply combine results:")
 # print(mean_pop_ser)
 # print()
+
+# TODO: Task! 
+# 1. Update Bellevue so that it's region is set to 'W'
+# 2. Update Moses Lake's population to the actual population
+# 3. Find the minimum population of the city in each region
 
 
 
