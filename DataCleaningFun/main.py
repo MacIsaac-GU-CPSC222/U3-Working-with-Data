@@ -72,33 +72,55 @@ task_decoder = \
     {"1": "Water Plants", 
      "2": "Fill Medication Dispenser",
      "3": "Wash Countertop",
-     "4":"Sweep and Dust", 
+     "4": "Sweep and Dust", 
      "5": "Cook",
      "6": "Wash Hands",
      "7": "Perform TUG", 
      "8": "Perform TUG w/ Questions", 
      "dot": "Day Out Task"}
 
+def decode_task(df):
+    ser = df["task"]
+    for key in task_decoder:
+        ser.replace(key, task_decoder[key], inplace = True)
+# decode_task(df)
+df["task"] = df["task"].replace(task_decoder)
+print(df.head(10))
 
 # Clean Class
 # Lots of different ways that labels were encoded
 # want to convert them to only 2 different values
 
+print(df["class"].unique())
 
+df.replace(["HOA", "hoa", "healthy"], "HOA", inplace=True)
+print(df["class"].unique())
+
+df.replace(["parkinson's", "PD", "Parkinson's", "pd", "Parkinson"], "PD", inplace=True)
+print(df["class"].unique())
+
+print(df['class'].value_counts())
 # Check Column Types
-
+def check_types(df):
+    for column in df.columns:
+        print(column, df[column].dtype)
+    print()
+check_types(df)
 
 # Get mean of duration
-
+# print(df["duration"].mean())
 
 # change type of data in a column/series
+df["duration"] = df["duration"].astype(np.int32)
 
-
+check_types(df)
 # get mean, sum, std of duration
-
+print(df["duration"].mean())
+print(df["duration"].sum())
+print(df["duration"].std())
 
 # Save our work (to_csv, no index)
-
+df.to_csv("pd_hoa_activities_cleaned.csv", index = False)
 
 
 
@@ -106,15 +128,15 @@ task_decoder = \
 
 # Load CSV
 
-
+df = pd.read_csv("dates.csv", parse_dates=["date"], date_format="%m-%d-%Y")
 # Set Index
-
-
+df.set_index("date", inplace= True)
+print(df)
 # Check Sorted
-
+df = df.sort_index()
 
 # Try slicing
-
+print(df.loc["2025-11-05":"2026-02-12"])
 
 # Sort Index
 
