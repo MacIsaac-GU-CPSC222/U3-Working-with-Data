@@ -57,9 +57,16 @@ print(df.head(3))
 
 # Decode task!
 # replace 1-8 and dot with more human readable/meaningful labels
-task_decoder = {"1": "Water Plants", "2": "Fill Medication Dispenser",
-                "3": "Wash Countertop","4":"Sweep and Dust", "5": "Cook",
-                 "6": "Wash Hands","7": "Perform TUG", "8": "Perform TUG w/ Questions", "dot": "Day Out Task"}
+task_decoder = \
+    {"1": "Water Plants", 
+     "2": "Fill Medication Dispenser",
+     "3": "Wash Countertop",
+     "4":"Sweep and Dust", 
+     "5": "Cook",
+     "6": "Wash Hands",
+     "7": "Perform TUG", 
+     "8": "Perform TUG w/ Questions", 
+     "dot": "Day Out Task"}
 
 def decode_task(df):
     ser = df["task"]
@@ -76,42 +83,40 @@ print(df.head(10))
 
 print(df["class"].unique())
 
-def clean_class(df):
-    ser = df['class'].copy()
-    for i in range(len(ser)):
-        curr_class = str(ser.iloc[i])
-        curr_class = curr_class.lower()
-        if "hoa" in curr_class or "healthy" in curr_class:
-            ser.iloc[i] = "HOA"
-        elif "pd" in curr_class or "parkinson" in curr_class:
-            ser.iloc[i] = "PD"
-        else:
-            print(f"Unrecognized status: {i} {curr_class}")
-        df["class"] = ser
+df.replace(["healthy", "hoa", "HOA"], "HOA", inplace=True)
+df.replace(["PD", "parkinson's", "Parkinson's", "Parkinson", "pd"], "PD", inplace=True)
 
-clean_class(df)
 print(df.head(20))
 print(df["class"].value_counts())
 
 
-# Check Column Types
-for column in df.columns:
-    print(column, df[column].dtype)
+# Check Column Type
 
+def check_types(df):
+    for column in df.columns:
+        print(column, df[column].dtype)
+    print()
+check_types(df)
 
-# logic error!! duration values are stored as strings
-# its concatanting a bunch of strings together!
+# Get mean of duration
+#   - logic error!! duration values are stored as strings
+#   - its concatenating a bunch of strings together!
 # print(df["duration"].mean())
+
+
+# change type of data in a column/series
 df["duration"] = df["duration"].astype(np.int32)
 
-for column in df.columns:
-    print(column, df[column].dtype)
+check_types(df)
 
+
+# get mean, sum, std of duration
 print(df["duration"].mean())
 print(df["duration"].sum())
 print(df["duration"].std())
 
-# We don't need to store the indexes
+# Save our work (to_csv, no index)
+#   - We don't need to store the indexes
 df.to_csv("pd_hoa_activities_cleaned.csv", index=False)
 
 # TODO: Try to analyze this data a bit
@@ -121,4 +126,54 @@ df.to_csv("pd_hoa_activities_cleaned.csv", index=False)
 # try to find which person per class had the best and worst average duration over all tasks
 
 # find the average duration per task given different age groups (may need to do some research online/chatbot). If you do, try to understand the methods that you find online. Then, try to use these methods to additional analysis yourself
+
+
+# =========== Dates Demo ===========
+
+# Load CSV
+
+# Without Dates (just strings)
+df = pd.read_csv("dates.csv")
+
+# FIXED!
+df = pd.read_csv("dates.csv", parse_dates=["date"], date_format="%m-%d-%Y")
+
+print(df.dtypes)
+
+# Set Index
+df.set_index("date", inplace=True)
+
+print(df.head())
+
+print("Date Index sorted?", df.index.is_monotonic_increasing)
+
+# Try slicing BEFORE sorting (often errors for partial/range slicing)
+# print(df.loc["11-05-2025":"02-12-2026"])
+
+
+# Sort Index
+df_sorted = df.sort_index()
+
+print("Date Index sorted?", df_sorted.index.is_monotonic_increasing)
+
+print(df_sorted.head())
+
+print()
+
+
+# Between Nov 11 2025 and Feb 12 2026
+print(df_sorted.loc["2025-11-05":"2026-02-12"])
+print()
+
+
+# All rows after jan 2026
+print(df_sorted.loc["2026-02-01":])
+print()
+
+# Feb 12 2026
+print(df_sorted.loc["2026-02-12"])
+print()
+
+
+
 

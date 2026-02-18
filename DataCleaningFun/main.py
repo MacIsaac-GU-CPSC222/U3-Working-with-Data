@@ -2,14 +2,16 @@ import numpy as np
 import pandas as pd
 
 # # Load the data
-# df = pd.read_csv("pd_hoa_activities.csv")
-# print(df.shape)
+df = pd.read_csv("pd_hoa_activities.csv")
+print(df.shape)
 
-# # Explore the data
+# Explore the data
 # print(df.head(5))
+
 # print(df.tail(7))
 
 # print(f"Number of participants: {df.shape[0]//9}") # 9 is the number of tasks per pid
+# print(len(df["pid"].unique()))
 
 # print(df.iloc[660:670, :])
 
@@ -89,6 +91,10 @@ import pandas as pd
 #             print(f"Unrecognized status: {i} {curr_class}")
 #         df["class"] = ser
 
+# df["class"] = df["class"].replace(["hoa", "healthy"], "HOA")
+# df["class"] = df["class"].replace(["parkinson's", "Parkinson's", "Parkinson", "pd"], "PD")
+# print(df["class"].unique())
+
 # clean_class(df)
 # print(df.head(20))
 # print(df["class"].value_counts())
@@ -120,5 +126,5 @@ import pandas as pd
 # compare each group's average duration per task
 # try to find which person per class had the best and worst average duration over all tasks
 
-# find the average duration per task given different age groups (may need to do some research online/chatbot). If you do, try to understand the methods that you find online. Then, try to use these methods to additional analysis yourself
+# find the average duration per task given different age groups (may need to do some research online). If you do, try to understand the methods that you find online. Then, try to use these methods to additional analysis yourself
 
