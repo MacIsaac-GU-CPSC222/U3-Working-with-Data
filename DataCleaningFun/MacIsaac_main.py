@@ -1,9 +1,11 @@
 import numpy as np 
 import pandas as pd
 
+
 # # Load the data
 df = pd.read_csv("pd_hoa_activities.csv")
 print(df.shape)
+
 # Explore the data (head and tail)
 print(df.head(5))
 print(df.tail(7))
@@ -12,8 +14,10 @@ print(df.tail(7))
 print(len(df["pid"].unique()))
 
 # look at missing data (rows 660-670)
-
 print(df.iloc[660:670])
+print((df["duration"]=="?")[660:670])
+print(df[:][df["duration"]=="?"])
+
 
 # # Missing data
 # # .value_counts() returns each unique value and the amount of occurrences of it within a series
@@ -21,27 +25,27 @@ print(df.iloc[660:670])
 
 print(df["duration"].value_counts()["?"])
 
-# # ways to handle missing values
-# # 1. discard them
-# # never want to throw away data
 
-# # 2. fill them
-# # fill w/ most frequent label
-# # fill w/ central tendency measure
-# # 3. do nothing with them
-# # handle on a case by case basis later
+# ways to handle missing values
+# 1. discard them
+# never want to throw away data
 
-# # replace "?" with np.NaN
-# # support in np for NaN values!
-# # fill NaN, drop NaN, etc
-df.replace("?", np.NaN, inplace=True)
-# print(df["duration"].value_counts()["?"])
+# 2. fill them
+# fill w/ most frequent label
+# fill w/ central tendency measure
+# 3. do nothing with them
+# handle on a case by case basis later
+
+# replace "?" with np.NaN
+# support in np for NaN values!
+# fill NaN, drop NaN, etc
 
 # # replaces a value with a specified value
 # # inplace = True modifies dataframe instead of returning a modified one
 # print()
 
-# df.replace("?", np.NaN, inplace=True)
+df.replace("?", np.NaN, inplace=True)
+print(df["duration"].value_counts()["?"])
 
 # # isnull() will return a bool array
 # # representing true/false if value is null
@@ -59,11 +63,10 @@ print(df.shape)
 
 print(df.iloc[650:670, :])
 
-df.reset_index(inplace=True, drop = True)
+df.reset_index(inplace=True, drop=True)
 print(df.iloc[650:670, :])
 # # old index is saved, we don't need it, add drop=True to reset_index
 # print(df.head(3))
-
 
 
 # # Decode task!
@@ -86,6 +89,7 @@ def decode_task(df):
 # decode_task(df)
 df["task"] = df["task"].replace(task_decoder)
 print(df.head(10))
+
 
 # Clean Class
 # Lots of different ways that labels were encoded
@@ -123,36 +127,6 @@ print(df["duration"].std())
 df.to_csv("pd_hoa_activities_cleaned.csv", index = False)
 
 
-
-# =========== Dates Demo ===========
-
-# Load CSV
-
-df = pd.read_csv("dates.csv", parse_dates=["date"], date_format="%m-%d-%Y")
-# Set Index
-df.set_index("date", inplace= True)
-print(df)
-# Check Sorted
-df = df.sort_index()
-
-# Try slicing
-print(df.loc["2025-11-05":"2026-02-12"])
-
-# Sort Index
-
-
-# Between Nov 11 2025 and Feb 12 2026
-
-
-# All rows after jan 2026
-
-
-# Feb 12 2026
-
-
-
-
-
 # ===== end of class practice time =====
 # TODO: Try to analyze this data a bit
 
@@ -162,16 +136,59 @@ print(df.loc["2025-11-05":"2026-02-12"])
 
 #   - compare each group's average duration per task
 
-#   - try to find which person per class had the best and worst average duration over all tasks
-
-
-
-
-
-
-
-
+#   - try to find which person per class had the best average duration over all tasks (then find the person per class with the worst)
 
 
 # find the average duration per task given different age groups (may need to do some research online/chatbot). If you do, try to understand the methods that you find online. Then, try to use these methods to additional analysis yourself
+
+
+
+# =========== Dates Demo ===========
+
+
+
+df = pd.read_csv("dates.csv", parse_dates=["date"], date_format="%m-%d-%Y")
+
+print(df.dtypes)
+
+# Set Index
+df.set_index("date", inplace=True)
+
+print(df.head())
+
+print("Date Index sorted?", df.index.is_monotonic_increasing)
+
+# Try slicing BEFORE sorting (often errors for partial/range slicing)
+# print(df.loc["11-05-2025":"02-12-2026"])
+
+
+# Sort Index
+df_sorted = df.sort_index()
+
+print("Date Index sorted?", df_sorted.index.is_monotonic_increasing)
+
+print(df_sorted.head())
+
+print()
+
+
+# Between Nov 11 2025 and Feb 12 2026
+print(df_sorted.loc["2025-11-05":"2026-02-12"])
+print()
+
+
+# All rows after jan 2026
+print(df_sorted.loc["2026-02-01":])
+print()
+
+# Feb 12 2026
+print(df_sorted.loc["2026-02-12"])
+print()
+
+
+
+
+
+
+
 
