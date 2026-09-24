@@ -112,67 +112,62 @@ import numpy as np
 pops = [229447, 755078, 151574, 38977]
 cities = ["Spokane", "Seattle", "Bellevue", "Issaquah"]
 pop_ser = pd.Series(pops, index=cities)
-# print(pop_ser)
-# index = <list>
+
+print(pop_ser)
 
 pop_ser.name = "Population"
 pop_ser.index.name = "Cities"
 print(pop_ser)
-
-
-
-
-
-
 
 # # indexing and slicing with series
 
 # # first method: labels
 
 # # 1. indexing with label
-
-
+print(pop_ser["Seattle"])
 # # 2. indexing with list of labels
-
-
+labels = ["Seattle", "Spokane"]
+print(pop_ser[labels])
 # # 3. slicing with labels
 # # is inclusive of the stop label
 
-
-
-
-
-
-
+print(pop_ser["Seattle":"Issaquah"])
 
 # # second indexing with positions
 # # use .iloc[ ] for position based indexing
 
 # # 1. indexing with position
-
+print(pop_ser.iloc[1])
 
 # # 2. indexing with list of positions
-
+positions = [0, 3]
+print(pop_ser.iloc[positions])
 
 # # 3. slicing with positions
 # # is exclusive of the stop label
-
+print(pop_ser.iloc[0::2])
+print(pop_ser.iloc[-1::])
 
 # # summary stats
-
+print(pop_ser.mean())
+print(pop_ser.std())
 # # works with numpy ufuncs
-
+print(np.min(pop_ser))
 # TODO: Get the mean of Seattle and Spokane
+cities = ["Seattle", "Spokane"]
 
+major_cities = pop_ser[cities]
+avg_major_cities = major_cities.mean()
+print(f"average of seattle and spokane: {avg_major_cities}")
 
 # # we can add a new value to the series
 # # much like we add a new key-value pair to a dictionary
-
-
-
 # # we can also make an empty Series
 
-# how to append series together
+pop_ser2 = pd.Series(dtype=int)
+print(pop_ser2)
+pop_ser2["Federal Way"] = 97701
+print(pop_ser2)
 
 # # time for DataFrames!
 # # lets make a DataFrame from a 2D list
@@ -183,65 +178,78 @@ print(pop_ser)
 # # columns: "City", "Population", "Size"
 # # where Size is one of "Small", "Medium", "Large"
 
+pop_data = [["Spokane", 229447, "Large"],
+            ["Seattle", 755078, "Large"],
+            ["Bellevue", 151574, "Medium"],
+            ["Issaquah", 38977, "Small"]]
 
+pop_df = pd.DataFrame(pop_data, columns=["City", "Population", "Size"])
+pop_df = pop_df.set_index("City")
+print(pop_df)
 
 # # Dataframe indexing
 print("=========DF index=========")
 # # option 1: Basic Indexing (Takes column name, not row index)
 # df[col_name1]
-
-
+print(pop_df["Population"])
 
 # df[[col_name1, col_name2]] 
-
+print(pop_df[["Population", "Size"]])
 
 print("=========DF .loc=========")
 # # Option 2: .loc function (takes row/column names, not positions)
 # format df.loc[row, col]
 # each section can take 
 #   - single value (row/cell selection)
+print(pop_df.loc["Seattle"])
 
 #   - slice
+print(pop_df.loc["Spokane": "Bellevue", "Population"])
 
 
 #   - fancy index (list of values)
-
+print(pop_df.loc[["Seattle", "Issaquah"], "Size"])
 
 
 # print("=========DF .iloc=========")
 # # Option 3: .iloc function (takes, row/column positions, not names)
-
+print(pop_df.iloc[0])
 # #   - slice
-
+print(pop_df.iloc[1:3, 1])
 # #   - fancy index (list of values)
+print(pop_df.iloc[0, [0,1]])
 
 # TODO: Using .iloc, print the last row of pop_df 
-
+print(pop_df.iloc[-1])
+print(pop_df.iloc[3])
+print(pop_df.iloc[len(pop_df)-1])
 
 # TODO: Using .iloc, print the last two rows of pop_df 
-
-
-
-
-
-
-
+# indexes = [2,3]
+# print(pop_df.iloc[2])
+print(pop_df.iloc[2:])
+print(pop_df.iloc[-2:])
 
 # # Reading in a CSV
 # # lets load up regions.csv into a dataframe
-
+region_df = pd.read_csv("regions.csv",index_col=0)
+print(region_df)
 
 
 # TODO: Print the first 3 rows from region_df (use the position indexes - iloc)
+print(region_df.iloc[:3])
+print(region_df.iloc[[0,1,2]])
+
 
 # # now lets join pop_df and region_df on "City"
 # # to make a 3rd DataFrame
 # # by default, merge() does an inner join
-
+merged_df = pop_df.merge(region_df, on="City", how="outer")
+print(merged_df)
 
 # # lets write the contents of merged_df to a file
 # # merged.csv
-
+merged_df.to_csv("merged.csv")
 
 # # data aggregation
 # # gathering and presenting data in a summarized form
