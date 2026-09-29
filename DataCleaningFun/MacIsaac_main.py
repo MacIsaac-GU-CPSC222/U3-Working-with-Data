@@ -16,7 +16,11 @@ print(len(df["pid"].unique()))
 # look at missing data (rows 660-670)
 print(df.iloc[660:670])
 print((df["duration"]=="?")[660:670])
-print(df[:][df["duration"]=="?"])
+# df.loc[row selection, column selection]
+# rows with "?" for duration - boolean pd series
+rows_with_qm = df["duration"] == "?"
+
+print(df.loc[rows_with_qm])
 
 
 # # Missing data
@@ -43,7 +47,6 @@ print(df["duration"].value_counts()["?"])
 # # replaces a value with a specified value
 # # inplace = True modifies dataframe instead of returning a modified one
 # print()
-
 df.replace("?", np.NaN, inplace=True)
 print(df["duration"].value_counts()["?"])
 

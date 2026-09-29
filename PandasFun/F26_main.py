@@ -251,14 +251,14 @@ print(merged_df)
 # # merged.csv
 merged_df.to_csv("merged.csv")
 
-# # data aggregation
-# # gathering and presenting data in a summarized form
-# # lets see split apply combine in action!
-# # 1. split
+# data aggregation
+# gathering and presenting data in a summarized form
+# lets see split apply combine in action!
+# 1. split
 
-# # short way to do # 2. apply and #3. combine
-# # grouped operations return a series with each group item 
-# # matched to the corresponding value
+# short way to do # 2. apply and #3. combine
+# grouped operations return a series with each group item 
+# matched to the corresponding value
 
 
 # print("short way: split apply combine results:")
