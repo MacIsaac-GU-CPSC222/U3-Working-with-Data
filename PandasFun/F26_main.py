@@ -255,33 +255,42 @@ merged_df.to_csv("merged.csv")
 # gathering and presenting data in a summarized form
 # lets see split apply combine in action!
 # 1. split
-
+grouped_by_size = merged_df.groupby("Size")
+print(grouped_by_size)
 # short way to do # 2. apply and #3. combine
-# grouped operations return a series with each group item 
-# matched to the corresponding value
 
+# grouped operations return a series with each group item matched to the corresponding value
 
-# print("short way: split apply combine results:")
-
+print("short way: split apply combine results:")
+mean_pop_ser = grouped_by_size["Population"].mean()
+print(mean_pop_ser)
 
 # print()
 
 
-
-
 # TODO: Task! 
+# update value format
+# <df>.loc[row name (key), column name] = <new value>
+
 # 1. Update Bellevue so that it's region is set to 'W'
+merged_df.loc["Bellevue", "Region"] = "W"
 # 2. Update Moses Lake's population to the actual population
 # population: 26,969
+merged_df.loc["Moses Lake", "Population"] = 26969
+print(merged_df)
 # 3. Find the maximum population in each region
-
-# print(merged_df["Region"])
-
 # split
-
+group_by_region = merged_df.groupby("Region")
 # apply/combine
-
+max_pop_per_region = group_by_region["Population"].max()
 # output
+print(f"max pop per region: {max_pop_per_region}")
+
+
+# complex way to get names of cities
+max_pop_reg = group_by_region["Population"].idxmax().dropna()
+print(max_pop_reg)
+print(merged_df.loc[max_pop_reg, ["Population", "Region"]])
 
 
 # longer way to do #2. apply and #3. combine
