@@ -86,12 +86,11 @@ task_decoder = {
     "dot": "Day Out Task"}
 
 def decode_task(df):
-    task_ser = df["task"]
     for key in task_decoder:
-        task_ser = task_ser.replace(key, task_decoder[key])
+        df["task"] = df["task"].replace(key, task_decoder[key])
 
-# decode_task(df)
-df["task"] = df["task"].replace(task_decoder)
+decode_task(df)
+# df["task"] = df["task"].replace(task_decoder)
 print(df)
 
 # Lots of different ways that labels were encoded
