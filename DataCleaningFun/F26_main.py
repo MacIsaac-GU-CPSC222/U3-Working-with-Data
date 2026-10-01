@@ -85,11 +85,44 @@ task_decoder = {
     "8": "Perform TUG w/ Questions", 
     "dot": "Day Out Task"}
 
+def decode_task(df):
+    task_ser = df["task"]
+    for key in task_decoder:
+        task_ser = task_ser.replace(key, task_decoder[key])
+
+# decode_task(df)
+df["task"] = df["task"].replace(task_decoder)
+print(df)
+
+# Lots of different ways that labels were encoded
+# want to convert them to only 2 different values: HOA and PD
+print(df["class"].unique())
+
+df["class"] = df["class"].replace(["HOA", "hoa", "healthy"], "HOA")
+print(df["class"].unique())
+
+df["class"] = df["class"].replace(["parkinson's", 
+                                   "PD", 
+                                   "Parkinson's", 
+                                   "pd", 
+                                   "Parkinson"], "PD")
+print(df["class"].unique())
+
+print(df["class"].value_counts())
+
+def check_types(df):
+    for column in df.columns:
+        print(column, df[column].dtype)
+
+check_types(df)
+
+# change type of data in a column/series
+df["duration"] = df["duration"].astype(np.int32)
+
+print(df["duration"].mean())
 
 
-
-
-
+df.to_csv("pd_hoa_activities_cleaned.csv", index=False)
 
 # ===== end of class practice time =====
 # TODO: Try to analyze this data a bit
